@@ -3,18 +3,24 @@ use Test::Base;
 
 use Geo::Coordinates::Converter::Point;
 
-plan tests => 6 * blocks;
+plan tests => 12 * blocks;
 
 filters { point => 'yaml' };
 
+sub point_test {
+    my($geo, $point) = @_;
+    is $geo->$_, $point->{$_} for (qw/ lat lng datum format /);
+    is $geo->latitude,  $point->{lat};
+    is $geo->longitude, $point->{lng};
+}
+
 run {
     my $block = shift;
-    my $geo = Geo::Coordinates::Converter::Point->new($block);
-
-    is $geo->$_, $block->$_ for (qw/ lat lng datum format /);
-    is $geo->latitude,  $block->lat;
-    is $geo->longitude, $block->lng;
+    my $point = Geo::Coordinates::Converter::Point->new( $block->point );
+    point_test $point, $block->point;
+    point_test $point->clone, $block->point;
 }
+
 
 __END__
 

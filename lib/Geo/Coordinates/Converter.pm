@@ -5,7 +5,7 @@ use warnings;
 use base qw( Class::Accessor::Fast );
 __PACKAGE__->mk_accessors(qw/ source current /);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Carp;
 use String::CamelCase qw( camelize );
@@ -17,16 +17,14 @@ our $DEFAULT_CONVERTER = 'Geo::Coordinates::Converter::Datum';
 our $DEFAULT_FORMAT = [qw/ Degree Dms /];
 our $DEFAULT_INETRNAL_FORMAT = 'degree';
 
+sub add_default_formats {
+    my($class, @formats) = @_;
+    my %default_formats = map { $_ => 1 } @{ $DEFAULT_FORMAT }, @formats;
+    $DEFAULT_FORMAT = [ keys %default_formats ];
+}
+
 sub new {
     my($class, %opt) = @_;
-
-    my $source = delete $opt{point} || Geo::Coordinates::Converter::Point->new({
-        lat    => delete $opt{lat}    || '0.000000',
-        lng    => delete $opt{lng}    || '0.000000',
-        height => delete $opt{height} || 0,
-        datum  => delete $opt{datum}  || 'wgs84',
-        format => delete $opt{format} || '',
-    });
 
     my $converter = delete $opt{converter} || $DEFAULT_CONVERTER;
     unless (ref $converter) {
@@ -34,15 +32,19 @@ sub new {
         $converter = $converter->new unless ref $converter;
     }
 
+    my $internal_format = delete $opt{internal_format} || $DEFAULT_INETRNAL_FORMAT;
+    my $formats = delete $opt{formats};
+    my $source = delete $opt{point} || Geo::Coordinates::Converter::Point->new(\%opt);
+
     my $self = bless {
         source => $source,
         formats => {},
         converter => $converter,
-        internal_format => delete $opt{internal_format} || $DEFAULT_INETRNAL_FORMAT,
+        internal_format => $internal_format,
     }, $class;
 
     my @plugins = @{ $DEFAULT_FORMAT };
-    push @plugins, @{ delete $opt{formats} } if ref $opt{formats} eq 'ARRAY';
+    push @plugins, @{ $formats } if ref $formats eq 'ARRAY';
     for my $plugin (@plugins) {
         $self->load_format($plugin);
     }

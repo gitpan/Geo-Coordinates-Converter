@@ -11,6 +11,16 @@ use Storable ();
 *latitude  = \&lat;
 *longitude = \&lng;
 
+sub new {
+    my $class = shift;
+    my $self = $class->SUPER::new(@_);
+    $self->{lat} ||= '0.000000';
+    $self->{lng} ||= '0.000000';
+    $self->{height} ||= 0;
+    $self->{datum} ||= 'wgs84';
+    $self;
+}
+
 sub clone {
     my $self = shift;
     my $clone = Storable::dclone($self);
