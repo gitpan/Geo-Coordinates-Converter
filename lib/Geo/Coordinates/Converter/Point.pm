@@ -14,8 +14,8 @@ use Storable ();
 sub new {
     my $class = shift;
     my $self = $class->SUPER::new(@_);
-    $self->{lat} ||= '0.000000';
-    $self->{lng} ||= '0.000000';
+    $self->{lat} ||= $self->{latitude} || '0.000000';
+    $self->{lng} ||= $self->{longitude} || '0.000000';
     $self->{height} ||= 0;
     $self->{datum} ||= 'wgs84';
     $self;
