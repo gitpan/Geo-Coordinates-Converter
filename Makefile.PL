@@ -7,6 +7,10 @@ build_requires 'Test::More';
 
 requires $_ for (qw/ Class::Accessor::Fast Readonly String::CamelCase Storable UNIVERSAL::require /);
 
+author_tests 'xt';
+
+test_requires 'YAML';
+
 use_test_base;
 auto_include;
 auto_install;
