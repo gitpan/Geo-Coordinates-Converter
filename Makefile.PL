@@ -1,17 +1,24 @@
 use inc::Module::Install;
- 
 name 'Geo-Coordinates-Converter';
 all_from 'lib/Geo/Coordinates/Converter.pm';
+readme_from 'lib/Geo/Coordinates/Converter.pm';
+readme_markdown_from 'lib/Geo/Coordinates/Converter.pm';
+githubmeta;
 
-build_requires 'Test::More';
+requires 'parent';
+requires 'Class::Accessor::Fast';
+requires 'Readonly';
+requires 'String::CamelCase';
+requires 'Storable';
+requires 'UNIVERSAL::require';
 
-requires $_ for (qw/ Class::Accessor::Fast Readonly String::CamelCase Storable UNIVERSAL::require /);
-
+tests 't/*.t';
 author_tests 'xt';
 
+build_requires 'Test::More';
 test_requires 'YAML';
-
 use_test_base;
+
+auto_set_repository;
 auto_include;
-auto_install;
 WriteAll;

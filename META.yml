@@ -1,7 +1,7 @@
 ---
 abstract: 'simple converter of geo coordinates'
 author:
-  - 'Kazuhiro Osawa <ko@yappo.ne.jp>'
+  - 'Kazuhiro Osawa <yappo {at} shibuya {dot} pl>'
 build_requires:
   ExtUtils::MakeMaker: 6.42
 configure_requires:
@@ -25,7 +25,10 @@ requires:
   Storable: 0
   String::CamelCase: 0
   UNIVERSAL::require: 0
+  parent: 0
   perl: 5.8.1
 resources:
+  homepage: http://github.com/yappo/p5-Geo-Coordinates-Converter/tree
   license: http://dev.perl.org/licenses/
-version: 0.05
+  repository: git://github.com/yappo/p5-Geo-Coordinates-Converter.git
+version: 0.06

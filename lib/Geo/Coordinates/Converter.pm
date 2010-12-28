@@ -1,13 +1,12 @@
 package Geo::Coordinates::Converter;
-
 use strict;
 use warnings;
-use base qw( Class::Accessor::Fast );
+use parent 'Class::Accessor::Fast';
 __PACKAGE__->mk_accessors(qw/ source current /);
 
 use 5.008001;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Carp;
 use String::CamelCase qw( camelize );
@@ -299,7 +298,7 @@ after it converts it, L<Geo::Coordinates::Converter::Point> object it returned.
 
 =head1 AUTHOR
 
-Kazuhiro Osawa E<lt>ko@yappo.ne.jpE<gt>
+Kazuhiro Osawa E<lt>yappo {at} shibuya {dot} plE<gt>
 
 =head1 SEE ALSO
 

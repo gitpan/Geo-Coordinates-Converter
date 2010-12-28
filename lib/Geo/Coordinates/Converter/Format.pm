@@ -1,8 +1,7 @@
 package Geo::Coordinates::Converter::Format;
-
 use strict;
 use warnings;
-use base qw( Class::Accessor::Fast );
+use parent 'Class::Accessor::Fast';
 
 use Carp;
 
@@ -42,7 +41,7 @@ as for these formats, the added thing is possible.
 
 =head1 AUTHOR
 
-Kazuhiro Osawa E<lt>ko@yappo.ne.jpE<gt>
+Kazuhiro Osawa E<lt>yappo {at} shibuya {dot} plE<gt>
 
 =head1 SEE ALSO
 
