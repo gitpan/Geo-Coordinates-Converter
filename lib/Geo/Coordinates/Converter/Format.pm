@@ -1,18 +1,24 @@
 package Geo::Coordinates::Converter::Format;
 use strict;
 use warnings;
-use parent 'Class::Accessor::Fast';
 
 use Carp;
 
 sub name { '' }
 sub detect { croak 'This method is unimplemented' }
 
+sub new {
+    my($class, $args) = @_;
+    $args = +{} unless defined $args;
+    bless { %{ $args } }, $class;
+}
+
 sub normaraiz { goto &normalize } # alias for backward compatibility
 sub normalize {
     my($self, $point) = @_;
 
     for my $meth (qw/ lat lng /) {
+        next unless defined $point->$meth;
         if ($point->$meth =~ /^\+(.+)$/) {
             $point->$meth($1);
         } elsif (my($prefix, $val) = $point->$meth =~ /^([NEWS])(.+)$/i) {

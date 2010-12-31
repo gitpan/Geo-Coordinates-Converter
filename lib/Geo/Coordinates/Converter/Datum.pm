@@ -1,33 +1,39 @@
 package Geo::Coordinates::Converter::Datum;
 use strict;
 use warnings;
-use parent 'Class::Accessor::Fast';
 
 use Carp;
 use Readonly;
 use String::CamelCase qw( camelize );
-use UNIVERSAL::require;
+use Module::Load ();
 
-Readonly my $RADIAN => 4 * atan2(1, 1) / 180;
+use constant RADIAN => 4 * atan2(1, 1) / 180;
 
 sub name { '' }
 sub radius { 0 }
 sub rate { 0 }
 sub translation { +{ x => 0, y => 0, z => 0 } }
 
+sub new {
+    my($class, $args) = @_;
+    $args = +{} unless defined $args;
+    bless { %{ $args } }, $class;
+}
+
 sub load_datum {
     my($self, $datum) = @_;
 
     unless (ref $datum) {
         if ($datum =~ s/^\+//) {
-            $datum->require or die $@;
+            Module::Load::load($datum);
         } else {
             my $name = $datum;
             $datum = sprintf '%s::%s', ref $self, camelize($name);
-            $datum->require;
+            local $@;
+            eval { Module::Load::load($datum) };
             if ($@ && ref $self ne __PACKAGE__) {
                 $datum = sprintf '%s::%s', __PACKAGE__, camelize($name);
-                $datum->require or die $@;
+                Module::Load::load($datum);
             }
         }
         $datum = $datum->new;
@@ -52,13 +58,13 @@ sub to_datum {
 
     my $height = $point->height || 0;
 
-    my $lat_sin = sin($point->lat * $RADIAN);
-    my $lat_cos = cos($point->lat * $RADIAN);
+    my $lat_sin = sin($point->lat * RADIAN);
+    my $lat_cos = cos($point->lat * RADIAN);
     my $radius_rate = $self->radius / sqrt(1 - $self->rate * $lat_sin * $lat_sin);
 
     my $xy_base = ($radius_rate + $height) * $lat_cos;
-    my $x = $xy_base * cos($point->lng * $RADIAN);
-    my $y = $xy_base * sin($point->lng * $RADIAN);
+    my $x = $xy_base * cos($point->lng * RADIAN);
+    my $y = $xy_base * sin($point->lng * RADIAN);
     my $z = ($radius_rate * (1 - $self->rate) + $height) * $lat_sin;
 
     $point->lat($x + (-1 * $self->translation->{x}));
@@ -90,8 +96,8 @@ sub datum_from {
     my $radius_rate = $self->radius / sqrt(1 - $self->rate * ($lat_sin * $lat_sin));
 
     $point->height($xy_sqrt / cos($lat) - $radius_rate);
-    $point->lat($lat / $RADIAN);
-    $point->lng($lng / $RADIAN);
+    $point->lat($lat / RADIAN);
+    $point->lng($lng / RADIAN);
     $point->datum($self->name);
 
     $point;
