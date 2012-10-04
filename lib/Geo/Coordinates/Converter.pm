@@ -7,7 +7,7 @@ use Class::Accessor::Lite (
 
 use 5.008001;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 use Carp;
 use String::CamelCase qw( camelize );
@@ -16,7 +16,7 @@ use Module::Load ();
 use Geo::Coordinates::Converter::Point;
 
 our $DEFAULT_CONVERTER = 'Geo::Coordinates::Converter::Datum';
-our $DEFAULT_FORMAT = [qw/ Degree Dms Milliseconds /];
+our $DEFAULT_FORMAT = [qw/ Degree Dms Milliseconds ISO6709 /];
 our $DEFAULT_INETRNAL_FORMAT = 'degree';
 
 sub add_default_formats {

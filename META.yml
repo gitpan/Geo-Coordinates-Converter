@@ -33,4 +33,4 @@ resources:
   homepage: https://github.com/yappo/p5-Geo-Coordinates-Converter/tree
   license: http://dev.perl.org/licenses/
   repository: git://github.com/yappo/p5-Geo-Coordinates-Converter.git
-version: 0.12
+version: 0.13
